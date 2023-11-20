@@ -16,8 +16,6 @@ const BtnLoad=()=>{
               :
               <ShowMore/>
           }
-        
- 
         </>
     )
 }

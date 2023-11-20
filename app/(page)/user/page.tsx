@@ -1,8 +1,11 @@
-import IUser from "@/app/type";
 import BtnLoad from "@/app/component/user/BtnLoad";
+import BtnMain from "@/app/component/btnMain/BtnMain";
+import Link from "next/link";
+import ShowMore from "@/app/component/user/ShowMore";
 
 async function getData() {
-  const res = await fetch('https://api.github.com/users',{ next: { revalidate: 60 } });
+
+  const res = await fetch("http://localhost:3000/api/data?top=10&offset=0",{ next: { revalidate: 60 } });
 
   const data= await res.json();
   // console.log('response', data)
@@ -14,23 +17,16 @@ async function getData() {
   return data;
 }
  
-export default async function Main() {
+export default async function User() {
   const data = await getData()
   // console.log("render!!!");
   return (
-      <main>
-
-           {data && data.map((item : IUser) =>{
-              return (
-                  <>
-                      <p>{item.node_id}</p>
-                  </>  
-              )
-          })}
-           <BtnLoad/>
-      
+    <>
+     
+     <ShowMore data={data}/>
          
-      </main>
+    </>
+   
   )
     
 }
