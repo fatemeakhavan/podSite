@@ -8,7 +8,11 @@ export async function GET(request: NextRequest) {
     const res = await fetch('https://api.github.com/users')
     const data: IUser[] = await res.json()
 
-    const result = data.slice(offset, offset + top)
+    const list = data.slice(offset, offset + top)
+    const totalPage = data.length;
    
-    return Response.json(result)
+    return Response.json({
+      list,
+      totalPage
+    })
   }

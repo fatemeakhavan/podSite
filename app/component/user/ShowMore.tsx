@@ -2,17 +2,24 @@
 import { useEffect, useState } from "react";
 import IUser from "@/app/type";
 import Link from "next/link";
+import {  getUserDataAction } from "@/app/actions";
+
 
 
 interface props {
-  data: IUser[];
+  data: {list: IUser[], totalPage: number}
+
 }
 
 const fetcher = (url: any) => fetch(url).then((r) => r.json());
 const ShowMore = ({ data }: props) => {
-  const [userList, setUserList] = useState<IUser[]>(data);
+  const [userList, setUserList] = useState<IUser[]>(data.list);
   const [offset, setOffset] = useState<number>(0);
 
+  const getData = async () => {
+   const result= await getUserDataAction(10, offset);
+    setUserList([...userList, ...result.list]);
+  };
 
   const handelClick = () => {
     setOffset(offset + 10);
@@ -21,15 +28,6 @@ const ShowMore = ({ data }: props) => {
   useEffect(() => {
     if (offset !== 0) getData();
   }, [offset]);
-
-  const getData = async () => {
-    const res = await fetch(
-      `http://localhost:3000/api/data?top=10&offset=${offset}`
-    );
-    const data = await res.json();
-    setUserList([...userList, ...data]);
-  };
-
   return (
     <>
       <div className=" container mx-auto mt-8 min-w-fit max-w-6xl flex flex-row  flex-wrap mb-5">
@@ -63,14 +61,15 @@ const ShowMore = ({ data }: props) => {
           );
         })}
       </div>
-      <div className="text-center">
+      {userList.length !== data.totalPage ?   <div className="text-center">
         <button
           className="btn bg-red-400 p-3 rounded-full border-solid"
           onClick={handelClick}
         >
           LoadMore
         </button>
-      </div>
+      </div> : null}
+     
     </>
   );
 };
