@@ -8,11 +8,9 @@ import {  getUserDataAction } from "@/app/actions";
 
 interface props {
   data: {list: IUser[], totalPage: number}
-
 }
 
-const fetcher = (url: any) => fetch(url).then((r) => r.json());
-const ShowMore = ({ data }: props) => {
+const LoadMore = ({ data }: props) => {
   const [userList, setUserList] = useState<IUser[]>(data.list);
   const [offset, setOffset] = useState<number>(0);
 
@@ -29,12 +27,13 @@ const ShowMore = ({ data }: props) => {
     if (offset !== 0) getData();
   }, [offset]);
   return (
+    // container mx-auto mt-8 min-w-fit max-w-6xl flex flex-row  flex-wrap mb-5
     <>
-      <div className=" container mx-auto mt-8 min-w-fit max-w-6xl flex flex-row  flex-wrap mb-5">
+      <div className="min-h-screen flex flex-wrap items-center justify-center  ">
         {userList.map((item: IUser) => {
           return (
             <>
-              <section className="w-80 ml-3 my-3">
+              <section className="w-96 ml-3 my-3">
                 <article className="max-w-sm bg-white border border-gray-200 rounded-lg shoadow-lg flex ">
                   <img
                     src={item.avatar_url}
@@ -73,4 +72,4 @@ const ShowMore = ({ data }: props) => {
     </>
   );
 };
-export default ShowMore;
+export default LoadMore;

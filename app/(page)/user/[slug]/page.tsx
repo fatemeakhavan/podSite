@@ -1,26 +1,22 @@
-import BtnUser from "@/app/component/user/BtnBack";
 import IUser from "@/app/type";
-
-export const fallback = false;
+import Link from "next/link";
 
 export async function generateStaticParams() {
       const posts = await fetch('https://api.github.com/users').then((res) => res.json())
-     
       return posts.map((post :IUser) => ({
-        id: post.login,
+        slug: post.login,
       }))
     }
+export default async function userInfo({ params }: { params: { slug: string } }){
+   const {slug}=params;
 
-export default async function userInfo({ params }: { params: { id: string } }){
-   const {id}=params;
-
-   const res=await fetch(`https://api.github.com/users/${id}`,{next:{revalidate:10}});
+   const res=await fetch(`https://api.github.com/users/${slug}`,{next:{revalidate:10}});
 
    const data= await res.json();
 
    return (
 
-    <section className="container mx-auto mt-64 grid justify-items-center">
+    <section className="min-h-screen flex items-center justify-center">
         <article className=" bg-white border border-gray-200 rounded-lg shoadow-lg">
               <img src={data.avatar_url} alt="avatar img" className="w-96 items-center rounded-lg"/>
         <div className="mt-3 mx-3 overflow-hidden">
@@ -32,71 +28,11 @@ export default async function userInfo({ params }: { params: { id: string } }){
               <p></p>
              <span className="text-sky-700 font-bold">github:</span><span className="text-sm text-sky-400 overflow-hidden ">{data.html_url}</span>
        </div> 
-         <BtnUser/>
+       <div className="grid justify-items-center mb-3">
+           <Link href="/user" className="border border-sky-500 bg-sky-600 text-white shadow-lg px-4 py-3  rounded-lg text-sm mt-2 items-center">back</Link>
+       </div>
        </article>  
     </section>
 
     )
-   
-}
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client"
-
-// import useSWR from "swr";
-//   const fetcher = (url : any)=> fetch(url).then(r => r.json())
-//   export default function UserInfo({ params }: { params: { slug: any } }) {
-//     const {data}= useSWR(`https://api.github.com/users/${params.slug}`,fetcher)
-
-   
-//     return (
-//         <main>
-//              {/* {data && data.map((item : any) =>{
-//                 return (
-//                     <>
-//                       <p>{item.site_admin}</p>
-//                     </>  
-//                 )
-//             })} */}
-//            {data &&<p>  {data.events_url}</p>} 
-        
-           
-//         </main>
-//     )
-      
-//   }
+   }
